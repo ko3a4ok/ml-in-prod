@@ -26,6 +26,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: .jobs/Dockerfile
+          file: jobs/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ml-job:latest
