@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-ml
+spec:
+  containers:
+  - image: ko3a4ok/ml-job:latest
+    name: pod-app-ml
