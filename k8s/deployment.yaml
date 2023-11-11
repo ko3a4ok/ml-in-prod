@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployments-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: deployments-web
+  template:
+    metadata:
+      labels:
+        app: deployments-web
+    spec:
+      containers:
+      - name: web
+        image: ko3a4ok/ml-web:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deployments-web
+  labels:
+    app: deployments-web
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+  selector:
+    app: deployments-web
