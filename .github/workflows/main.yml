@@ -91,7 +91,7 @@ jobs:
     - name: Install and configure KinD
       run: |
         GO111MODULE="on" go get sigs.k8s.io/kind@v0.20.0
-        sudo mv $(go env GOPATH)/bin/kind /usr/local/bin/
+        sudo mv $GOBIN/kind /usr/local/bin/
         kind create cluster
 
     - name: Set up kubectl
