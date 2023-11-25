@@ -23,20 +23,19 @@ model = Sequential([
     Dense(1, activation='sigmoid')
 ])
 
-CONFIG = {
-    "epochs": 32,
-    "validation_split": 0.2,
-    "batch_size": 16,
-}
-EXTRA_CONFIG = {
-    "learning_rate": 0.0001,
-}
 wandb.init(
     project="L5",
-    config=CONFIG,
 )
 
-model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=EXTRA_CONFIG['learning_rate']), loss='mse')
+config = wandb.config
+print("Mega config: ", config)
+
+optimizer = None
+if config.optimizer == 'adam':
+  optimizer = tf.keras.optimizers.Adam(learning_rate=config.learning_rate)
+elif config.optimizer == 'sgd':
+  optimizer = tf.keras.optimizers.SGD(learning_rate=config.learning_rate)
+model.compile(optimizer=optimizer, loss='mse')
 
 
 class WandbCallback(Callback):
@@ -44,5 +43,6 @@ class WandbCallback(Callback):
     wandb.log(logs)
 
 
-model.fit(X, y, **CONFIG, callbacks=[WandbCallback()])
+model.fit(X, y, epochs=config.epochs, validation_split=config.validation_split,
+          batch_size=config.batch_size, callbacks=[WandbCallback()])
 wandb.finish()
