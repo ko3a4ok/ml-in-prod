@@ -3,7 +3,7 @@ name: ci
 on:
   push:
     branches:
-      - "main"
+      - "*"
 
 jobs:
   build-job:
@@ -118,3 +118,23 @@ jobs:
     - name: Clean up
       run: |
         kind delete cluster
+
+  l6-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build new
+      run: |
+        docker build -f l6/Dockerfile -t l6:latest l6
+    - name: Test code
+      run: |
+        docker run l6:latest make test_code
+
+    - name: Test data
+      run: |
+        docker run l6:latest make test_data
+
+    - name: Test model
+      run: |
+        docker run -e WANDB_API_KEY=${{ secrets.WANDB_API_KEY }} l6:latest make test_model
+
