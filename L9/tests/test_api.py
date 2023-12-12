@@ -10,7 +10,7 @@ BYE_EMBEDDING = api.model.encode('bye-bye').tolist()
 
 
 def test_empty_input():
-  response = client.post("/model:predict", json={})
+  response = client.post("/predict", json={})
   assert response.status_code == 422
 
 
