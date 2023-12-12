@@ -7,13 +7,16 @@ st.title('Online shop')
 
 DATA_URL = 'https://gist.github.com/ko3a4ok/9e8128ca2917a2b9379a716b50ef621c/raw/0df0af04199f0cfcfe6fb7531f467bbbaf0e183e/cymbal_product_desc.txt'
 
-@st.cache_resource
+
+@st.cache(allow_output_mutation=True)
 def get_model():
   return SentenceTransformer('TaylorAI/bge-micro')
 
+
 data_load_state = st.text('Loading data...')
 
-@st.cache_data
+
+@st.cache(allow_output_mutation=True)
 def load_data():
   df = pd.read_fwf(DATA_URL).iloc[:1000, :1]
   df.columns = ['product description']
@@ -33,6 +36,6 @@ if txt:
   emb = get_model().encode(txt)
   results = data.sort_values(
       by='embedding',
-      key=lambda x: x.map(lambda col:  spatial.distance.cosine(emb, col)),
+      key=lambda x: x.map(lambda col: spatial.distance.cosine(emb, col)),
   )[:10]['product description']
   st.write(results)

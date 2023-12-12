@@ -6,16 +6,16 @@ app = FastAPI()
 
 
 class Prediction(BaseModel):
-  instances: list[str]
+  instances: list
 
 
 class Response(BaseModel):
-  embeddings: list[list[float]]
+  embeddings: list
 
 
 model = SentenceTransformer('TaylorAI/bge-micro')
 
 
-@app.post('/model:predict')
+@app.post('/predict')
 def predict(prediction: Prediction):
   return Response(embeddings=model.encode(prediction.instances).tolist())

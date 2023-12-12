@@ -15,19 +15,19 @@ def test_empty_input():
 
 
 def test_empty_predictions():
-  response = client.post("/model:predict", json={'instances': []})
+  response = client.post("/predict", json={'instances': []})
   assert response.status_code == 200
   assert response.json() == {'embeddings': []}
 
 
 def test_single_predictions():
-  response = client.post("/model:predict", json={'instances': ['hello']})
+  response = client.post("/predict", json={'instances': ['hello']})
   assert response.status_code == 200
   assert response.json() == {'embeddings': [HELLO_EMBEDDING]}
 
 
 def test_batch_predictions():
-  response = client.post("/model:predict",
+  response = client.post("/predict",
                          json={'instances': ['hello', 'bye-bye']})
   assert response.status_code == 200
   data = response.json()
