@@ -1,8 +1,10 @@
 from fastapi.testclient import TestClient
 
 from context import api
+
 client = TestClient(api.app)
-HELLO_EMBEDDING = api.model.encode('hello again').tolist()
+
+HELLO_EMBEDDING = api.model.encode('very first message').tolist()
 BYE_EMBEDDING = api.model.encode('bye-bye').tolist()
 
 
@@ -18,13 +20,15 @@ def test_empty_predictions():
 
 
 def test_single_predictions():
-  response = client.post("/model:predict", json={'instances': ['hello again']})
+  response = client.post("/model:predict",
+                         json={'instances': ['very first message']})
   assert response.status_code == 200
   assert response.json() == {'embeddings': [HELLO_EMBEDDING]}
 
 
 def test_batch_predictions():
   response = client.post("/model:predict",
-                         json={'instances': ['hello again', 'bye-bye']})
+                         json={'instances': ['very first message',
+                                             'bye-bye']})
   assert response.status_code == 200
   assert response.json() == {'embeddings': [HELLO_EMBEDDING, BYE_EMBEDDING]}
