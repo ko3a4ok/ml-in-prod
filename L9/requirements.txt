@@ -1,4 +1,5 @@
 streamlit
+torch
 sentence-transformers
 scipy
 fastapi
