@@ -1,0 +1,8 @@
+name: my-conda-environment
+channels:
+- conda-forge
+- huggingface
+- defaults
+dependencies:
+- python=3.11
+- transformers
