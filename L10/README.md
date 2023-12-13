@@ -57,6 +57,37 @@ kubectl apply -f k8s/seldon-deployment.yaml
 
 Test
 ```shell
-curl -X POST "http://IP:7777/seldon/seldon/seldon-model/api/v1.0/predictions" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"data\": [\"hello\"]}"
+curl -X POST "http://IP:7777/seldon/seldon/seldon-model/api/v1.0/predictions" -H "accept: application/json" -H "Content-Type: application/json" -d '{"data": ["hello"]}'
 
+```
+
+
+## KServe
+
+Install:
+```shell
+curl -s "https://raw.githubusercontent.com/kserve/kserve/release-0.11/hack/quick_install.sh" | bash
+kubectl create namespace kserve-test
+kubectl apply -n kserve-test -f k8s/kserve-deployment.yaml
+```
+
+Create docker:
+```shell
+docker build . --tag ko3a4ok/roma-model:latest -f Dockerfile.kserve
+docker push ko3a4ok/roma-model:latest
+```
+
+Run:
+```shell
+kubectl apply -n kserve-test -f k8s/kserve-deployment.yaml
+```
+
+Port forwarding:
+```shell
+kubectl port-forward "$(kubectl get pod -o name | grep roma-model)" 8080:8080
+```
+
+Test:
+```shell
+curl 'http://localhost:8080/v1/models/roma-model:predict'    -d '{"instances": ["Hello"]}' -H 'Content-type: application/json'
 ```

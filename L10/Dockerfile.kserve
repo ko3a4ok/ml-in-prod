@@ -1,0 +1,11 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install python packages
+COPY requirements.txt.kserve requirements.txt
+RUN pip install -r requirements.txt
+
+COPY serving serving
+
+ENTRYPOINT ["python", "serving/kserve_api.py"]
