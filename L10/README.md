@@ -91,3 +91,16 @@ Test:
 ```shell
 curl 'http://localhost:8080/v1/models/roma-model:predict'    -d '{"instances": ["Hello"]}' -H 'Content-type: application/json'
 ```
+
+## Triton
+
+Start the server with the model:
+```shell
+cd triton
+docker run -v `pwd`:/data --shm-size=1g --ulimit memlock=-1 -p 8000:8000 --ulimit stack=67108864 -ti nvcr.io/nvidia/tritonserver:23.11-py3 make -C /data
+```
+
+Send a test request:
+```shell
+curl -X POST localhost:8000/v2/models/ololo/versions/1/infer -d '{"inputs": [{"name": "text", "datatype": "BYTES", "shape": [1, 1], "data": ["Hello"]}]}'
+```
