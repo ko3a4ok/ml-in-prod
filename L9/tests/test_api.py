@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 import numpy as np
 
-from context import api
+from api import api
 
 client = TestClient(api.app)
 
