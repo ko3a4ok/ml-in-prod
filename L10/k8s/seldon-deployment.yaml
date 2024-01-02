@@ -1,0 +1,18 @@
+apiVersion: machinelearning.seldon.io/v1
+kind: SeldonDeployment
+metadata:
+  name: seldon-model
+  namespace: seldon
+spec:
+  name: SeldonModel
+  predictors:
+  - componentSpecs:
+    - spec:
+        containers:
+        - name: seldon-model
+          image: ko3a4ok/emb:latest
+          imagePullPolicy: Always
+    graph:
+      name: seldon-model
+    name: default
+    replicas: 1
