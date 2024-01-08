@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emb-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emb-api
+  template:
+    metadata:
+      labels:
+        app: emb-api
+    spec:
+      containers:
+      - name: emb-api
+        image: ko3a4ok/serving:latest
+        command: ['uvicorn', 'api.api:app', '--host=0.0.0.0']
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emb-api
+  labels:
+    app: emb-api
+spec:
+  ports:
+  - port: 8000
+  selector:
+    app: emb-api
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: emb-api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: emb-api
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
