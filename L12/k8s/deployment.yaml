@@ -1,0 +1,37 @@
+apiVersion: "serving.kserve.io/v1beta1"
+kind: "InferenceService"
+metadata:
+  name: "roma-model"
+spec:
+  predictor:
+    containers:
+    - name: kserve-container
+      image: ko3a4ok/roma-model:latest
+  transformer:
+    containers:
+    - image: ko3a4ok/text-transformer:latest
+      name: kserve-container
+      command:
+      - "python"
+      - "-m"
+      - "main"
+      args:
+      - --model_name
+      - roma-model
+---
+apiVersion: sources.knative.dev/v1beta1
+kind: KafkaSource
+metadata:
+  name: kafka-source
+spec:
+  consumerGroup: knative-group
+  bootstrapServers:
+  - kafka-headless.default.svc.cluster.local:9092
+  topics:
+  - test
+  sink:
+    ref:
+      apiVersion: serving.kserve.io/v1beta1
+      kind: InferenceService
+      name: roma-model
+    uri: /v1/models/roma-model:predict
