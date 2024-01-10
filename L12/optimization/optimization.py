@@ -236,10 +236,7 @@ def quantization(model):
 
 def run():
   download_datasets()
-  # model = SentenceTransformer('ko3a4ok/roma-model', device='cpu')
-  model_name = 'all-distilroberta-v1'
-
-  model = SentenceTransformer(model_name, device='cpu')
+  model = SentenceTransformer('ko3a4ok/roma-model')
   model = distillation(model)
   model = dim_reduction(model)
   model.save('final')
